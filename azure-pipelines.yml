@@ -1,0 +1,26 @@
+steps:
+- task: DeleteFiles@1
+  inputs:
+    sourceFolder: '/Users/vsts/.gradle/init.d/'
+    contents: 'log-gradle-version-plugin.gradle'
+
+- task: Gradle@2
+  inputs:
+    workingDirectory: ''
+    gradleWrapperFile: 'gradlew'
+    gradleOptions: '-Xmx3072m'
+    publishJUnitResults: false
+    testResultsFiles: '**/TEST-*.xml'
+    tasks: 'clean build publish'
+    options: --stacktrace
+
+- task: CopyFiles@2
+  inputs:
+    sourceFolder: 'build/mvnDistRepo'
+    contents: '**/*'
+    targetFolder: $(Build.ArtifactStagingDirectory)/mvnDistRepo
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    artifactName: 'maven'
+    pathtoPublish: $(Build.ArtifactStagingDirectory)/mvnDistRepo
