@@ -10,7 +10,7 @@ repositories {
 }
 
 group = 'jaci.jniloader'
-version = '1.0.0'
+version = '1.0.1'
 
 compileJava {
   sourceCompatibility = 1.8
