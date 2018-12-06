@@ -139,7 +139,7 @@ public class JNILoader {
     }
 
     private File extractJarResource(String path) throws IOException {
-        File output = File.createTempFile("jni_" + libraryName, path);
+        File output = File.createTempFile("jni_" + libraryName, "H" + path.hashCode());
         output.deleteOnExit();
 
         InputStream is = JNILoader.class.getResourceAsStream("/" + path);
