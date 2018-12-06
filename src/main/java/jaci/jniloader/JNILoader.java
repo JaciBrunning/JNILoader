@@ -111,6 +111,7 @@ public class JNILoader {
                 String path = it.next();
                 try {
                     tryLoadRelative(path);
+                    trying = false;
                 } catch (UnsatisfiedLinkError ex2) {
                     try {
                         tryLoadJarResource(path);
@@ -124,11 +125,11 @@ public class JNILoader {
         }
     }
 
-    private void tryLoadRelative(String path) throws UnsatisfiedLinkError {
+    public void tryLoadRelative(String path) throws UnsatisfiedLinkError {
         System.load(new File(path).getAbsolutePath());
     }
 
-    private void tryLoadJarResource(String path) throws IOException, UnsatisfiedLinkError {
+    public void tryLoadJarResource(String path) throws IOException, UnsatisfiedLinkError {
         File f = extractJarResource(path);
         try {
             System.load(f.getAbsolutePath());
@@ -139,7 +140,7 @@ public class JNILoader {
     }
 
     private File extractJarResource(String path) throws IOException {
-        File output = File.createTempFile("jni_" + libraryName, "H" + path.hashCode());
+        File output = File.createTempFile("jni_" + libraryName, getSharedLibraryFile());
         output.deleteOnExit();
 
         InputStream is = JNILoader.class.getResourceAsStream("/" + path);
