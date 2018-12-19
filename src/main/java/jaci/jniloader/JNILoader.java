@@ -1,8 +1,11 @@
 package jaci.jniloader;
 
-import java.io.*;
-import java.util.Arrays;
-import java.util.Iterator;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -27,7 +30,8 @@ public class JNILoader {
      */
     public JNILoader(String libraryName) {
         this.libraryName = libraryName;
-        this.testPaths = Arrays.asList(getPlatformString() + "/" + getSharedLibraryFile());
+        this.testPaths = new ArrayList<>();
+        testPaths.add(getPlatformString() + "/" + getSharedLibraryFile());
     }
 
     /**
@@ -106,9 +110,7 @@ public class JNILoader {
         } catch (UnsatisfiedLinkError ex) {
             // Does not exist on system path - fallback to other options
             boolean trying = true;
-            Iterator<String> it = testPaths.iterator();
-            while (trying && it.hasNext()) {
-                String path = it.next();
+            for (String path : testPaths) {
                 try {
                     tryLoadRelative(path);
                     trying = false;
